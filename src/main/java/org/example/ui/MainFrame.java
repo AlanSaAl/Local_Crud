@@ -12,42 +12,28 @@ public class MainFrame {
     public static void createAndShowGUI() {
         BdOperations bdUtilities = new BdOperations();
 
-        JTextArea textArea = new JTextArea(1, 10);
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        JTextArea dataResultTextArea = new JTextArea(1, 10); // por que se hace primero el textArea y luego se le pasa al scrollPane?
+        JScrollPane scrollPane = new JScrollPane(dataResultTextArea);
 
         //Create and set up the window.
         JFrame frame = new JFrame("Crud Local");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 700);
 
-        // Cuadro de dialogo para obtener el id
-        JTextField textFieldConsulta = new JTextField(10);
+        frame.setLayout(new FlowLayout()); // Establecer gestor de diseño
 
-        //Add the ubiquitous "Hello World" label.
-        JLabel label = new JLabel("Ingrese el id que desea consultar: ");
-
-        frame.setLayout(new FlowLayout()); //para establecer un gestor de diseño
-
+        CaptureRow getRow = new CaptureRow("Ingrese el id que desea consultar: ", "Consultar");
         CaptureRow insertRow = new CaptureRow("Escriba los datos que desea registrar:", "Insertar");
         CaptureRow deleteRow = new CaptureRow("Ingrese el id que desea eliminar: ", "Eliminar");
         CaptureRow updateRow = new CaptureRow("Ingrese el registro que se va a actualizar: ", "Actualizar");
 
-        JButton b1 = new JButton("Consultar");
-        b1.addActionListener(new ActionListener() {
+        getRow.getButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Acciones a realizar cuando se hace clic en el botón
-                String id = textFieldConsulta.getText();
-                textArea.append(bdUtilities.obtenerRegistro(Integer.parseInt(id)));
-                System.out.println(bdUtilities.obtenerRegistro(Integer.parseInt(id)));
+                String id = getRow.getTextField().getText();
+                dataResultTextArea.append(bdUtilities.obtenerRegistro(Integer.parseInt(id)));
             }
         });
-
-        // Consultar
-        frame.getContentPane().add(label);
-        frame.getContentPane().add(textFieldConsulta);
-        frame.getContentPane().add(b1);
-        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
         insertRow.getButton().addActionListener(new ActionListener() {
             @Override
@@ -80,9 +66,11 @@ public class MainFrame {
             }
         });
 
+        frame.getContentPane().add(getRow);
         frame.getContentPane().add(insertRow);
         frame.getContentPane().add(deleteRow);
         frame.getContentPane().add(updateRow);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
         frame.setLocationRelativeTo(null);
         //Display the window.
